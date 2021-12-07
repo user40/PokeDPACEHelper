@@ -1,5 +1,3 @@
-local config = require "config"
-
 ----------------------------------
 -- Utility
 ----------------------------------
@@ -260,13 +258,5 @@ function clicker:click()
     buttons:click(key)
 end
 
-----------------------------------
--- Main
-----------------------------------
-clicker:init(config.filePath)
 
-local function main()
-    clicker:click()
-end
-
-emu.registerbefore(main)
+return clicker
