@@ -1,3 +1,4 @@
+local hex2dec = require("u64")
 ----------------------------------
 -- Utility
 ----------------------------------
@@ -14,6 +15,9 @@ local function iterFactory(x)
     end
 end
 
+local function hex2dec(hexString)
+    return ("%u"):format(number(hexString, 16))
+end
 ----------------------------------
 -- Button
 ----------------------------------
@@ -119,23 +123,8 @@ function interpreter:toKeys(line)
         return nil
     end
 
+    line = self:preProcess(line)
     local result = self:interpret(line)
-    if self.mode.eq then
-        self:addEq(result)
-    end
-
-    if self.mode.retire then
-        self:addRetire(result)
-    end
-
-    if self.mode.retireA then
-        self:addRetireA(result)
-    end
-
-    if self.mode.dot then
-        self:addDot(result)
-    end
-
     return iterFactory(self:twice(result))
 end
 
@@ -178,28 +167,26 @@ function interpreter:changeMode(mode)
     self.mode = mode
 end
 
-function interpreter:addPrefix(result, prefix)
-    local prefixKeys = self:interpret(prefix)
-    for i=1,#prefixKeys do
-        result[#result+1] = prefixKeys[i]
+function interpreter:preProcess(line)
+    if self.mode.hex then
+        line = hex2dec(line)
     end
-    return result
-end
-
-function interpreter:addEq(result)
-    return self:addPrefix(result, "=")
-end
-
-function interpreter:addRetire(result)
-    return self:addPrefix(result, "XA")
-end
-
-function interpreter:addRetireA(result)
-    return self:addPrefix(result, "XAA")
-end
-
-function interpreter:addDot(result)
-    return self:addPrefix(result, ".")
+    if self.mode.plusZero then
+        line = line .. "+0"
+    end
+    if self.mode.eq then
+        line = line .. "="
+    end
+    if self.mode.retire then
+        line = line .. "XnA"
+    end
+    if self.mode.retireA then
+        line = line .. "XnAA"
+    end
+    if self.mode.dot then
+        line = line .. ".C"
+    end
+    return line
 end
 
 -- {a, b, c} -> {a, a, b, b, c, c}
@@ -224,7 +211,7 @@ local clicker = {
 function clicker:init(filePath)
     self.isDone = false
     self.lines = io.lines(filePath)
-    self.keys = interpreter:toKeys(self.lines())
+    clicker:setNewLine()
 end
 
 function clicker:setNewLine()
@@ -237,7 +224,6 @@ function clicker:setNewLine()
 
         self.keys = interpreter:toKeys(line)
         if self.keys then
-            self.key = self.keys()
             return
         end
     end
@@ -254,6 +240,7 @@ function clicker:click()
         if self.isDone then
             return
         end
+        key = self.keys()
     end
     buttons:click(key)
 end
