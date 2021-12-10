@@ -15,9 +15,6 @@ local function iterFactory(x)
     end
 end
 
-local function hex2dec(hexString)
-    return ("%u"):format(number(hexString, 16))
-end
 ----------------------------------
 -- Button
 ----------------------------------
@@ -49,6 +46,8 @@ buttons.pos = {
     keyY = {"button", "Y"},
     keyA = {"button", "A"},
     keyB = {"button", "B"},
+    keyL = {"button", "L"},
+    keyR = {"button", "R"},
     keyStart = {"button", "start"}
 }
 
@@ -105,6 +104,8 @@ interpreter.dict = {
     ["B"] = "keyB",
     ["X"] = "keyX",
     ["Y"] = "keyY",
+    ["L"] = "keyL",
+    ["R"] = "keyR",
     ["n"] = "nop",
 }
 
@@ -113,7 +114,7 @@ function interpreter:init()
 end
 
 function interpreter:toKeys(line)
-    if self:isComment(line) then
+    if self:isComment(line) or line == "" then
         return
     end
 
@@ -170,6 +171,9 @@ end
 function interpreter:preProcess(line)
     if self.mode.hex then
         line = hex2dec(line)
+        if not line then
+            return nil
+        end
     end
     if self.mode.plusZero then
         line = line .. "+0"

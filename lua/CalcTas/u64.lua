@@ -1,10 +1,10 @@
 local function zero()
-    local int = {}
+    local num = {}
     -- 20 digit + carry digit
     for i = 1, 21, 1 do
-        int[i] = 0
+        num[i] = 0
     end
-    return int
+    return num
 end
 
 local function int(u32)
@@ -71,6 +71,23 @@ local function u64toDecString(u32High, u32Low)
     return str
 end
 
-return u64toDecString
+local function hex2dec(str)
+    local pat = "[^0-9ABCDEFabcdef]"
+    str = str:gsub(pat, "")
+    if #str == 0 then
+        return nil
+    end
+    local high, low
+    if #str <= 8 then
+        high = 0
+        low = tonumber(str:sub(-8,-1), 16)
+    else
+        high = tonumber(str:sub(1,-9), 16)
+        low = tonumber(str:sub(-8,-1), 16)
+    end
+    return u64toDecString(high, low)
+end
+
+return hex2dec
 -- test
 -- print(u64toDecString(0x12345678,0x90123456) == "1311768467284833366")
