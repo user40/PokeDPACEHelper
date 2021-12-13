@@ -17,6 +17,7 @@ set_cursor_entry:
 write_entry:
 @ If jumped from dot button, r0 == (address of somewhere) > 1
     _nop @movs r0, #2
+    .align 2, 0, 0
 common:
     adr r3, DAT_svPointer
     ldmia r3!, {r1-r2}          @ r3 = address of the cursor

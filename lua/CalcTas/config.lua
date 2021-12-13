@@ -1,3 +1,3 @@
 local config = {}
-config.filePath = "scripts/memory_editor_essential.txt"
+config.filePath = "scripts/sample_script.txt"
 return config

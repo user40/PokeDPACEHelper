@@ -117,6 +117,7 @@ function interpreter:init()
         eq=nil,
         dot=nil,
         singleNumber=nil,
+        conv=nil,
     }
 end
 
@@ -199,6 +200,9 @@ function interpreter:preProcess(line)
     end
     if self.mode.dot then
         line = line .. ".C"
+    end
+    if self.mode.conv then
+        line = line .. "YC"
     end
     return line
 end
