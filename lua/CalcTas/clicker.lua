@@ -110,7 +110,14 @@ interpreter.dict = {
 }
 
 function interpreter:init()
-    self.mode = {retire=nil, retireA=nil, eq=nil, dot=nil}
+    self.mode = {
+        retire=nil,
+        retireA=nil,
+        plusZero=nil,
+        eq=nil,
+        dot=nil,
+        singleNumber=nil,
+    }
 end
 
 function interpreter:toKeys(line)
@@ -180,6 +187,9 @@ function interpreter:preProcess(line)
     end
     if self.mode.eq then
         line = line .. "="
+    end
+    if self.mode.singleNumber then
+        line = line .. "+0="
     end
     if self.mode.retire then
         line = line .. "XnA"
