@@ -1,8 +1,13 @@
 # ===================================================================================================
 # The name of .s file
 TARGET			= memory_editor
+
 # The address where you want to extract the binary
 VMA             = 0x2293000
+
+# Ignore 0 in the byte writing script(0007). Comment out to disable.
+NOZERO			= --nozero
+
 # ===================================================================================================
 TARGET_VMA     = $(TARGET)_$(VMA)
 BIN             = $(TARGET_VMA).bin
@@ -31,10 +36,10 @@ wordDec: bin
 	python3 $(PYTHON_SCRIPT) -i $(BIN) -o $(TARGET_VMA)_wordDec.txt -a $(VMA) --mode=wordDec
 
 script: bin
-	python3 $(PYTHON_SCRIPT) -i $(BIN) -o $(TARGET_VMA)_script.txt -a $(VMA) --mode=script
+	python3 $(PYTHON_SCRIPT) -i $(BIN) -o $(TARGET_VMA)_script.txt -a $(VMA) --mode=script $(NOZERO)
 
 scriptDec: bin
-	python3 $(PYTHON_SCRIPT) -i $(BIN) -o $(TARGET_VMA)_scriptDec.txt -a $(VMA) --mode=scriptDec
+	python3 $(PYTHON_SCRIPT) -i $(BIN) -o $(TARGET_VMA)_scriptDec.txt -a $(VMA) --mode=scriptDec $(NOZERO)
 
 clean:
 	rm -rf $(TARGET_VMA) *.txt *.bin

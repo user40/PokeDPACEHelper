@@ -8,18 +8,18 @@ class bin2Text:
         self.address = address
         self.pointer = pointer
     
-    def toString(self, dec):
+    def toString(self, dec=False):
         return uintToString(self.uints, dec)
 
-    def toWordWriteParCode(self) -> List[str]:
-        return fourBytesWriteCode(self.uints, self.address)
+    def toWordWriteParCode(self, nozero=False) -> List[str]:
+        return fourBytesWriteCode(self.uints, self.address, nozero)
 
     def toWordWritePointerParCode(self) -> List[str]:
         return fourBytesWritePointerCode(self.uints, self.pointer)
 
-    def toByteWriteScript(self, dec=False) -> List[str]:
-        parCode = self.toWordWriteParCode()
-        return ByteWriterScript.fromParCodes(parCode, dec)
+    def toByteWriteScript(self, dec=False, nozero=False) -> List[str]:
+        parCode = self.toWordWriteParCode(nozero)
+        return ByteWriterScript.fromParCodes(parCode, dec, nozero)
 
 
 def binOpen(fpath) -> List[int]:
@@ -34,7 +34,7 @@ def binToUints(bytes: bytes) -> List[bytes]:
         bytes = bytes[4:]
     return l
 
-def uintToString(uints: List[int], dec=False) -> List[str]:
+def uintToString(uints: List[int], dec: bool) -> List[str]:
     result = []
     for uint in uints:
         if dec:
@@ -43,9 +43,11 @@ def uintToString(uints: List[int], dec=False) -> List[str]:
             result.append(f"{uint:08X}")
     return result
 
-def fourBytesWriteCode(units: List[int], startAddress: int) -> List[str]:
+def fourBytesWriteCode(units: List[int], startAddress: int, nozero: bool) -> List[str]:
     code = []
     for offset, uint in enumerate(units):
+        if nozero and (uint == 0):
+            continue
         address = startAddress + offset*4
         code.append(f"{address:08X} {uint:08X}")
     return code

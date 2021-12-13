@@ -10,6 +10,7 @@ usage = '''
   --mode=script     バイナリをメモリに書き込むゲーム内スクリプト(..0007)を出力（16進法）
   --mode=scriptDec  バイナリをメモリに書き込むゲーム内スクリプト(..0007)を出力（10進法）
   --mode=csv        未実装
+  --nozero          書き込む値が0の場合は無視する
 '''
 
 from bin2par import *
@@ -30,9 +31,9 @@ def main():
         elif option.mode == Mode.wordDec:
             f.writelines("\n".join(bin.toString(dec=True)))
         elif option.mode == Mode.script:
-            f.writelines("\n".join(bin.toByteWriteScript(dec=False)))
+            f.writelines("\n".join(bin.toByteWriteScript(dec=False, nozero=option.nozero)))
         elif option.mode == Mode.scriptDec:
-            f.writelines("\n".join(bin.toByteWriteScript(dec=True)))
+            f.writelines("\n".join(bin.toByteWriteScript(dec=True, nozero=option.nozero)))
         elif option.mode == Mode.csv:
             pass
         else:
@@ -53,11 +54,13 @@ class Option:
         outputPath="",
         address="0",
         mode=Mode.par,
+        nozero=False
         ):
         self.inputPath = inputPath
         self.outputPath = outputPath
         self.address = int(address, 16)
         self.mode = mode
+        self.nozero = nozero
     
     def setAddress(self, address):
         self.address = int(address, 16)
@@ -93,6 +96,8 @@ def parse(args: List[str]) -> Option:
             option.mode = Mode.scriptDec
         elif argument == '--mode=csv':
             option.mode = Mode.csv
+        elif argument == '--nozero':
+            option.nozero = True
         else:
             print(f"Bad argument '{argument}'")
             print("With '-h' option to show usage")

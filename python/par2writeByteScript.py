@@ -1,24 +1,26 @@
 from typing import List
 
 class ByteWriterScript:
-    def fromParCodes(codes: List[str], dec=False) -> List[str]:
+    def fromParCodes(codes: List[str], dec=False, nozero=False) -> List[str]:
         result = []
         for code in codes:
-            for script in ByteWriterScript.fromParCode(code):
+            for script in ByteWriterScript.fromParCode(code, nozero):
                 if dec:
                     result.append(f"{script:d}")
                 else:
                     result.append(f"{script:16x}")
         return result
         
-    def fromParCode(code: str) -> List[int]:
+    def fromParCode(code: str, nozero: bool) -> List[int]:
         result = []
         if code == "":
-            return None
+            return result
         address = int(code.split()[0], 16)
         value = int(code.split()[1], 16)
         bytes = splitToBytes(value)
         for i, byte in enumerate(bytes):
+            if nozero and (byte == 0):
+                continue
             script = ByteWriterScript.toLoadAdrsVal(address + i, byte)
             result.append(script)
         return result
