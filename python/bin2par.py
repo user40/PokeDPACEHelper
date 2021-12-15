@@ -15,7 +15,7 @@ class bin2Text:
         return fourBytesWriteCode(self.uints, self.address, nozero)
 
     def toWordWritePointerParCode(self) -> List[str]:
-        return fourBytesWritePointerCode(self.uints, self.pointer)
+        return fourBytesWritePointerCode(self.uints, self.pointer, self.address)
 
     def toByteWriteScript(self, dec=False, nozero=False) -> List[str]:
         parCode = self.toWordWriteParCode(nozero)
@@ -52,11 +52,11 @@ def fourBytesWriteCode(units: List[int], startAddress: int, nozero: bool) -> Lis
         code.append(f"{address:08X} {uint:08X}")
     return code
 
-def fourBytesWritePointerCode(units: List[int], pointer: int) -> List[str]:
+def fourBytesWritePointerCode(units: List[int], pointer: int, offset: int) -> List[str]:
     code = []
-    for offset, uint in enumerate(units):
+    for step, uint in enumerate(units):
         line1 = f"B{pointer:07X} 00000000"
-        line2 = f"{offset*4:08X} {uint:08X}"
+        line2 = f"{offset + step*4:08X} {uint:08X}"
         line3 = f"D2000000 00000000"
         code.extend([line1, line2, line3])
     return code

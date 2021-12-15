@@ -1,4 +1,4 @@
 PROGRAM = pokegram
 
 all:
-	g++ $(PROGRAM).cpp -o $(PROGRAM)
+	g++ main.cpp boxdata.cpp checksum_finder.cpp -o $(PROGRAM)

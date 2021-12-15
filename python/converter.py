@@ -3,7 +3,8 @@ usage = '''
 オプション:
   -i                入力するバイナリファイルのパス
   -o                出力するファイルのパス
-  -a                バイナリを配置するアドレス
+  -a                バイナリを配置するアドレス（--relativeオプションを付ける場合アドレスオフセット）
+  -p                参照するポインターのアドレス
   --mode=par        バイナリを書き込むPARコードを出力
   --mode=word       バイナリをワード(4byte)に切り分けて出力（16進法）
   --mode=wordDec    バイナリをワード(4byte)に切り分けて出力（10進法）
@@ -11,6 +12,7 @@ usage = '''
   --mode=scriptDec  バイナリをメモリに書き込むゲーム内スクリプト(..0007)を出力（10進法）
   --mode=csv        未実装
   --nozero          書き込む値が0の場合は無視する
+  --relative        PARでポインタコードを出力する
 '''
 
 from bin2par import *
@@ -22,10 +24,13 @@ from typing import List
 
 def main():
     option = parse(sys.argv[1:])
-    bin = bin2Text(option.inputPath, option.address)
+    bin = bin2Text(option.inputPath, option.address, option.pointer)
     with open(option.outputPath, 'w', encoding='utf-8', newline='\n') as f:
         if option.mode == Mode.par:
-            f.writelines("\n".join(bin.toWordWriteParCode()))
+            if option.isPointer:
+                f.writelines("\n".join(bin.toWordWritePointerParCode()))
+            else:
+                f.writelines("\n".join(bin.toWordWriteParCode()))
         elif option.mode == Mode.word:
             f.writelines("\n".join(bin.toString(dec=False)))
         elif option.mode == Mode.wordDec:
@@ -53,17 +58,24 @@ class Option:
         inputPath="",
         outputPath="",
         address="0",
+        pointer="0",
         mode=Mode.par,
-        nozero=False
+        nozero=False,
+        isPointer=False,
         ):
         self.inputPath = inputPath
         self.outputPath = outputPath
         self.address = int(address, 16)
+        self.pointer = int(pointer, 16)
         self.mode = mode
         self.nozero = nozero
+        self.isPointer = isPointer
     
     def setAddress(self, address):
         self.address = int(address, 16)
+
+    def setPointer(self, pointer):
+        self.pointer = int(pointer, 16)
 
 
 def parse(args: List[str]) -> Option:
@@ -84,6 +96,8 @@ def parse(args: List[str]) -> Option:
             option.outputPath = argument_from_queue.popleft()
         elif argument == '-a':
             option.setAddress(argument_from_queue.popleft())
+        elif argument == '-p':
+            option.setPointer(argument_from_queue.popleft())
         elif argument == '--mode=par':
             option.mode = Mode.par
         elif argument == '--mode=word':
@@ -98,6 +112,8 @@ def parse(args: List[str]) -> Option:
             option.mode = Mode.csv
         elif argument == '--nozero':
             option.nozero = True
+        elif argument == '--pointer':
+            option.isPointer = True
         else:
             print(f"Bad argument '{argument}'")
             print("With '-h' option to show usage")
