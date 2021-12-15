@@ -14,10 +14,10 @@ CC				= arm-none-eabi-gcc
 CFLAGS		    = -nostartfiles -nostdlib #-ffreestanding
 LDFLAGS			= -Wl,--section-start=.text=$(OFFSET)
 
-PYTHON_SCRIPT   = ../python/converter.py
-POKEGRAM		= ../pokegram/pokegram
+PYTHON_SCRIPT   = ../../tools/converter/converter.py
+POKEGRAM		= ../../tools/pokegram/pokegram
 
-all: clean par word wordDec script scriptDec
+all: clean par word wordDec
 	
 bin:
 	$(CC) $(TARGET).s -o $(TARGET) $(CFLAGS) $(LDFLAGS)

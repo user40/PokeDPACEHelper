@@ -16,7 +16,7 @@ CC				= arm-none-eabi-gcc
 CFLAGS		    = -nostartfiles -nostdlib #-ffreestanding
 LDFLAGS			= -Wl,--section-start=.text=$(VMA)
 
-PYTHON_SCRIPT   = ../python/converter.py
+PYTHON_SCRIPT   = ../../tools/converter/converter.py
 
 all: clean par word wordDec script scriptDec
 	
