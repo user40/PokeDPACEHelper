@@ -17,6 +17,7 @@
 		"ms-python.python",
 		"mhutchie.git-graph",
 		"qiaojie.binary-viewer",
+		"ms-vscode.cpptools",
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
