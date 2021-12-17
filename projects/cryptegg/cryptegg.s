@@ -1,4 +1,5 @@
 @ Encrypt the data at 0x02290000 - 0x02290088 and copy to box1,1
+@ If marks > 0 then modify PID.
 .arch armv5te
 .text
 .thumb
@@ -15,7 +16,9 @@ copy:
 set_flag:
     mov r2, #6          @ bad egg & plaintext flag
     strb r2, [r1, #4]
-    mov r2, #0x60         @ block shuffle type 3 ACDB
+    cmp r7, #0
+    beq encrypt
+    mov r2, #0x60       @ block shuffle type 3 ACDB
     strb r2, [r1, #1]
 encrypt:
     mov r0, r1
