@@ -16,18 +16,10 @@ struct boxdata{
         void encrypt();
         bool setValidChecksum();
 
-    private:
+    protected:
         u16 calcChecksum(u16 key);
         u32 nextRand(u32 rand);
         u16 mask(u16 data, u32 key);
 };
-
-inline u32 boxdata::nextRand(u32 rand) {
-    return rand * 1103515245L + 24691;
-}
-
-inline u16 boxdata::mask(u16 data, u32 key) {
-    return data ^ (key >> 16);
-}
 
 #endif // BOXDATA_H

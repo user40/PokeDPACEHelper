@@ -11,6 +11,7 @@ void boxdata::encrypt()
 }
 
 /**
+ * 適切なチェックサムを計算しセットする
  * @return 成功: true, 失敗: false;
  */
 bool boxdata::setValidChecksum()
@@ -36,4 +37,13 @@ u16 boxdata::calcChecksum(u16 seed)
 	}
 
 	return checksum;
+}
+
+
+inline u32 boxdata::nextRand(u32 rand) {
+    return rand * 1103515245L + 24691;
+}
+
+inline u16 boxdata::mask(u16 data, u32 key) {
+    return data ^ (key >> 16);
 }
