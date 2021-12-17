@@ -2,42 +2,47 @@
 # The name of .s file
 TARGET			= markingACE_setup
 
-# Pointer code settings
-POINTER			= 0x02108818
-OFFSET			= 0xC3A0
-POINTERFLAGS	= --pointer -a $(OFFSET) -p $(POINTER)
+# The address where you want to extract the binary
+VMA             = 0x2290000
+
+# Ignore 0 in the byte writing script(0007). Comment out to disable.
+NOZERO			= --nozero
+
 # ===================================================================================================
-BIN             = $(TARGET).bin
-POKE			= $(TARGET)_poke.bin
+TARGET_VMA     = $(TARGET)_$(VMA)
+BIN             = $(TARGET_VMA).bin
 
 CC				= arm-none-eabi-gcc
 CFLAGS		    = -nostartfiles -nostdlib #-ffreestanding
-LDFLAGS			= -Wl,--section-start=.text=$(OFFSET)
+LDFLAGS			= -Wl,--section-start=.text=$(VMA)
 
 PYTHON_SCRIPT   = ../../tools/converter/converter.py
-POKEGRAM		= ../../tools/pokegram/pokegram
 
-all: clean par word wordDec
+# all: clean par word wordDec script scriptDec
+all: clean par word
 	
 bin:
-	$(CC) $(TARGET).s -o $(TARGET) $(CFLAGS) $(LDFLAGS)
-	arm-none-eabi-objcopy -O binary $(TARGET) $(BIN)
-	arm-none-eabi-objdump -d $(TARGET) > $(TARGET)_dump.txt
-	rm $(TARGET)
+	$(CC) $(TARGET).s -o $(TARGET_VMA) $(CFLAGS) $(LDFLAGS)
+	arm-none-eabi-objcopy -O binary $(TARGET_VMA) $(BIN)
+	arm-none-eabi-objdump -d $(TARGET_VMA) > $(TARGET_VMA)_dump.txt
+	rm $(TARGET_VMA)
 
-poke: bin
-	$(POKEGRAM) $(BIN)
+par: bin
+	python3 $(PYTHON_SCRIPT) -i $(BIN) -o $(TARGET_VMA)_par.txt -a $(VMA) --mode=par
 
-par: poke
-	python3 $(PYTHON_SCRIPT) -i $(POKE) -o $(TARGET)_par.txt -a $(OFFSET) --mode=par $(POINTERFLAGS)
+word: bin
+	python3 $(PYTHON_SCRIPT) -i $(BIN) -o $(TARGET_VMA)_word.txt -a $(VMA) --mode=word
 
-word: poke
-	python3 $(PYTHON_SCRIPT) -i $(POKE) -o $(TARGET)_word.txt --mode=word
+wordDec: bin
+	python3 $(PYTHON_SCRIPT) -i $(BIN) -o $(TARGET_VMA)_wordDec.txt -a $(VMA) --mode=wordDec
 
-wordDec: poke
-	python3 $(PYTHON_SCRIPT) -i $(POKE) -o $(TARGET)_wordDec.txt --mode=wordDec
+script: bin
+	python3 $(PYTHON_SCRIPT) -i $(BIN) -o $(TARGET_VMA)_script.txt -a $(VMA) --mode=script $(NOZERO)
+
+scriptDec: bin
+	python3 $(PYTHON_SCRIPT) -i $(BIN) -o $(TARGET_VMA)_scriptDec.txt -a $(VMA) --mode=scriptDec $(NOZERO)
 
 clean:
-	rm -rf $(TARGET) *.txt *.bin
+	rm -rf $(TARGET_VMA) *.txt *.bin
 
 

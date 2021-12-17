@@ -17,6 +17,6 @@ markingACEを起動するために、最初に入力するブートローダ。
 ### memory_editor_essential
 簡易メモリエディターの必要最低限の部分を取り出したもの
 ### pokecrypt
-廃止。プログラムを暗号化してポケモンにつめこむ
+プログラムを暗号化してポケモンにつめこむ
 ### test_pokegram
 pokegram用のサンプルコード

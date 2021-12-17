@@ -29,7 +29,7 @@ poke: bin
 	$(POKEGRAM) $(BIN)
 
 par: poke
-	python3 $(PYTHON_SCRIPT) -i $(POKE) -o $(TARGET)_par.txt -a $(OFFSET) --mode=par $(POINTERFLAGS)
+	python3 $(PYTHON_SCRIPT) -i $(POKE) -o $(TARGET)_par.txt --mode=par $(POINTERFLAGS)
 
 word: poke
 	python3 $(PYTHON_SCRIPT) -i $(POKE) -o $(TARGET)_word.txt --mode=word
