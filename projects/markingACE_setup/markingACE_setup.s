@@ -15,12 +15,12 @@ start:
     bx r3
     .align 2, 0, 0
 data:
-    .word 0x30099800
-    .word 0x00004780
+    .word 0x99006827
+    .word 0x47883109
     .word 0x00000000
     .word 0x0206DAB0
-    @ 206dab0:	9800      	ldr	r0, [sp, #0]
-    @ 206dab2:	3009      	adds	r0, #0x9
-    @ 206dab4:	4780      	blx	r0
-    @ 206dab6:	0000      	.short	0x0000
-    @ 206dab8:	00000000 	.word	0x00000000
+    @  206dab0:	6827      	ldr	r7, [r4, #0]
+    @  206dab2:	9900      	ldr	r1, [sp, #0]
+    @  206dab4:	3109      	adds	r1, #9
+    @  206dab6:	4788      	blx	r1
+    @  206dab8:	00000000 	.word	0x00000000
