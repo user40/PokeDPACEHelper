@@ -1,6 +1,6 @@
 # ===================================================================================================
 # The name of .s file
-TARGET			= pokecrypt
+TARGET			= cryptegg
 
 # The address where you want to extract the binary
 VMA             = 0x2290008
