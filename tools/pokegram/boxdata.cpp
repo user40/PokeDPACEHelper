@@ -12,12 +12,13 @@ void boxdata::encrypt()
 
 void boxdata::forceEncrypt() {
     u16* data = (u16*) abcd;
-	u16	checksum = 0;
+	u16	newChecksum = 0;
 	for(int i = 0; i < sizeof(ABCD)/2 ; i++ ){
-		checksum += data[i];
+		newChecksum += data[i];
 	}
 
-    u32 rand = checksum;
+    checksum = newChecksum;
+    u32 rand = newChecksum;
 	for(int i = 0; i < sizeof(ABCD)/2 ; i++ ){
         rand = nextRand(rand);
 		data[i] = mask(data[i], rand);
