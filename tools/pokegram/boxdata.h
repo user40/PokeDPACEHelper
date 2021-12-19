@@ -14,6 +14,7 @@ struct boxdata{
 
     public:
         void encrypt();
+        void forceEncrypt();
         bool setValidChecksum();
 
     protected:

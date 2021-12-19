@@ -10,6 +10,20 @@ void boxdata::encrypt()
 	}
 }
 
+void boxdata::forceEncrypt() {
+    u16* data = (u16*) abcd;
+	u16	checksum = 0;
+	for(int i = 0; i < sizeof(ABCD)/2 ; i++ ){
+		checksum += data[i];
+	}
+
+    u32 rand = checksum;
+	for(int i = 0; i < sizeof(ABCD)/2 ; i++ ){
+        rand = nextRand(rand);
+		data[i] = mask(data[i], rand);
+	}
+}
+
 /**
  * 適切なチェックサムを計算しセットする
  * @return 成功: true, 失敗: false;
@@ -24,6 +38,7 @@ bool boxdata::setValidChecksum()
     }
     return false;
 }
+
 
 u16 boxdata::calcChecksum(u16 seed)
 {
