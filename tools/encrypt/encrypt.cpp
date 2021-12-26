@@ -1,5 +1,5 @@
 // データをポケモンに詰め込み暗号化し、バイナリファイルとして出力
-// 出力ファイル名は"*_poke0.bin"
+// 出力ファイル名は"*_egg.bin"
 
 #include "../pokegram/common.h"
 #include "../pokegram/boxdata.h"
@@ -53,6 +53,6 @@ int main(int argc, char *argv[]){
 string outputPath(char* inputPath) {
     string out = string(inputPath);
     int ext_i = out.find_last_of(".");
-    return out.substr(0, ext_i) + "_poke0.bin";
+    return out.substr(0, ext_i) + "_egg.bin";
 }
 

@@ -7,16 +7,20 @@
 .thumb_func
 load:
     adr r0, data0
-    ldmia r0!, {r1,r3}
+    ldmia r0!, {r1,r3,r4}
     mov r2, #0x1a
     swi #0x0b
     add r1, #1              @ entry point + 1
     str r1, [r3]
+    @ enable convinient button
+    mov r0, #0xe0
+    strb r0, [r4]
     bx lr
     .align 2, 0, 0
 data0:
     .word 0x02292800        @ entry point
     .word 0x020f90a0        @ townmap jump table
+    .word 0x02060BB5        @ conv button branch
 @ ============================================================
 entry:
     push {r4, lr}

@@ -9,18 +9,20 @@
 start:
     sub sp, #4                  @ for pop {pc}
     adr r0, data
-    ldmia r0, {r0, r1, r2, r3}
-    stmia r3!, {r0, r1, r2}
+    ldmia r0, {r0-r5}           @ r4 and r5 will be recovered by the caller, so ok.
+    @ change menu
+    strh r5, [r4]
+    @ rewrite the marking function
+    stmia r3!, {r0-r2}
     add r3, #1
     bx r3
     .align 2, 0, 0
 data:
-    .word 0x99007823
-    .word 0x47883109
-    .word 0x00000000
-    .word 0x0206DAB0
-    @  206dab0:	7823      	ldrb	r3, [r4, #0]
-    @  206dab2:	9900      	ldr	r1, [sp, #0]
-    @  206dab4:	3109      	adds	r1, #9
-    @  206dab6:	4788      	blx	r1
-    @  206dab8:	00000000 	.word	0x00000000
+    ldrb r3, [r4]    @ r3 = marks    
+    ldr r0, [sp]
+    mov r1, r0
+    add r1, #0x9    @ 8 + 1
+    blx r1
+    .short 0
+    .word 0x02038edc        @ menu setting address
+    .word 0x20c0            @ mov r0 #0xc0

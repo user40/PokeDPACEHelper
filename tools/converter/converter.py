@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 usage = '''
 バイナリファイルをPARコード等に変換します。
 オプション:
@@ -12,7 +14,7 @@ usage = '''
   --mode=scriptDec  バイナリをメモリに書き込むゲーム内スクリプト(..0007)を出力（10進法）
   --mode=csv        未実装
   --nozero          書き込む値が0の場合は無視する
-  --pointer        PARでポインタコードを出力する
+  --pointer         PARでポインタコードを出力する
 '''
 
 from bin2par import *

@@ -28,6 +28,7 @@ def binOpen(fpath) -> List[int]:
 
 def binToUints(bytes: bytes) -> List[bytes]:
     l = []
+    bytes = align(bytes)
     while len(bytes) > 0:
         four = bytes[:4]
         l.append(struct.unpack("<I", four)[0])
@@ -60,3 +61,10 @@ def fourBytesWritePointerCode(units: List[int], pointer: int, offset: int) -> Li
         line3 = f"D2000000 00000000"
         code.extend([line1, line2, line3])
     return code
+
+def align(data: bytes):
+    r = len(data) % 4
+    if r == 0:
+        return data
+    else:
+        return data + bytes([0]*(4-r))
